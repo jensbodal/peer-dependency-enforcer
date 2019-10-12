@@ -1,0 +1,25 @@
+{
+  "name": "@jensbodal/peer-dependency-enforcer",
+  "version": "0.1.0",
+  "description": "Peer dependency enforcement utils",
+  "main": "index.js",
+  "author": "Jens Bodal",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "semver": "^5.7.1",
+    "yargs": "^14.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "12.7.12",
+    "@types/semver": "~6.0.2",
+    "@types/yargs": "~13.0.3",
+    "ts-node": "~8.4.1",
+    "typescript": "~3.6.4"
+  },
+  "peerDependencies": {},
+  "scripts": {
+    "build": "tsc",
+    "test": "none"
+  }
+}
