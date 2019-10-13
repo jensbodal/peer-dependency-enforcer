@@ -1,23 +1,30 @@
-import { parseArgs } from "./parseArgs";
-import { validatePeerDependencies } from "./validatePeerDependencies";
-import { arrayContains } from "./util";
+import { listRuntimeDependencies } from './listRuntimeDependencies';
+import { parseArgs } from './parseArgs';
+import { arrayContains } from './utils';
+import { validatePeerDependencies } from './validatePeerDependencies';
 
+// tslint:disable-next-line: no-floating-promises
 (async () => {
-  const validatePeerDeps = ["validatePeerDeps", "vpd"];
-  const args = parseArgs({ validatePeerDeps });
+  const listRuntimeDeps = ['listRuntimeDeps', 'lrd'];
+  const validatePeerDeps = ['validatePeerDeps', 'vpd'];
+  const args = parseArgs({ listRuntimeDeps, validatePeerDeps });
 
   if (!args) {
     return;
   }
 
   // not sure how this gets typed with yargs
+  if (arrayContains(args.command, listRuntimeDeps)) {
+    const { folders } = (args as unknown) as {
+      [key: string]: string[];
+    };
+
+    await listRuntimeDependencies(folders);
+  }
+
+  // not sure how this gets typed with yargs
   if (arrayContains(args.command, validatePeerDeps)) {
-    const {
-      logMissing,
-      logUnmet,
-      throwMissing,
-      throwUnmet
-    } = (args as unknown) as {
+    const { logMissing, logUnmet, throwMissing, throwUnmet } = (args as unknown) as {
       [key: string]: boolean;
     };
 

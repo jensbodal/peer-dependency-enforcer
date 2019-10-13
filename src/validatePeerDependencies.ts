@@ -1,23 +1,23 @@
-import { existsSync, readdirSync } from "fs";
-import { resolve as resolvePath } from "path";
-import { satisfies, validRange } from "semver";
+import { existsSync, readdirSync } from 'fs';
+import { resolve as resolvePath } from 'path';
+import { satisfies, validRange } from 'semver';
 
 const setupErrorHandler = (throwUnmet: boolean, throwMissing: boolean) => {
-  process.on("exit", code => {
+  process.on('exit', code => {
     switch (code) {
       case 1:
         if (throwUnmet) {
-          throw Error("Unmet peer dependencies!");
+          throw Error('Unmet peer dependencies!');
         }
         break;
       case 2:
         if (throwMissing) {
-          throw Error("Missing peer dependencies!");
+          throw Error('Missing peer dependencies!');
         }
         break;
       case 3:
         if (throwMissing || throwUnmet) {
-          throw Error("Missing and Unmet peer dependencies!");
+          throw Error('Missing and Unmet peer dependencies!');
         }
         break;
     }
@@ -33,17 +33,14 @@ const validatePeerDependencies = async (
   THROW_UNMET: boolean
 ) => {
   setupErrorHandler(THROW_UNMET, THROW_MISSING);
-  const APP_DIR = ".";
+  const APP_DIR = '.';
 
-  const findPackageJsonPaths = async (
-    root: string,
-    packageJsonPaths: string[] = []
-  ): Promise<string[]> => {
+  const findPackageJsonPaths = async (root: string, packageJsonPaths: string[] = []): Promise<string[]> => {
     const packageFolders = readdirSync(root);
 
     for (const packageFolder of packageFolders) {
       // ignore .bin .cache and other hidden folders
-      if (packageFolder.startsWith(".")) {
+      if (packageFolder.startsWith('.')) {
         continue;
       }
 
@@ -79,6 +76,7 @@ const validatePeerDependencies = async (
 
       for (const peerDependency of Object.keys(packageJson.peerDependencies)) {
         if (
+          // skip any peerDependencies which are declared optional
           packageJson.peerDependenciesMeta &&
           packageJson.peerDependenciesMeta[peerDependency] &&
           packageJson.peerDependenciesMeta[peerDependency].optional
@@ -86,7 +84,7 @@ const validatePeerDependencies = async (
           continue;
         }
 
-        if (!peerDependencyMap[peerDependency]) {
+        if (!peerDependencyMap.hasOwnProperty(peerDependency)) {
           peerDependencyMap[peerDependency] = [];
         }
 
@@ -100,9 +98,7 @@ const validatePeerDependencies = async (
     return peerDependencyMap;
   };
 
-  const packageJsonPaths = await findPackageJsonPaths(
-    `${APP_DIR}/node_modules`
-  );
+  const packageJsonPaths = await findPackageJsonPaths(`${APP_DIR}/node_modules`);
   const peerDependencyMap = await createPeerDependencyMap(packageJsonPaths);
   const missingDependencies: string[] = [];
   const unmetDependencies: string[] = [];
@@ -111,34 +107,25 @@ const validatePeerDependencies = async (
     const packagePathIdx = packageJsonPaths.findIndex(
       path =>
         path
-          .split("/")
+          .split('/')
           .slice(2, -1)
-          .join("/") === peerDependencyName
+          .join('/') === peerDependencyName
     );
 
     for (const mapping of peerDependencyMap[peerDependencyName]) {
       if (packagePathIdx === -1) {
         missingDependencies.push(
-          `Missing "${peerDependencyName}@${mapping.version.replace(
-            " ",
-            ""
-          )}" required by: ${mapping.path}`
+          `Missing "${peerDependencyName}@${mapping.version.replace(' ', '')}" required by: ${mapping.path}`
         );
       } else {
-        const packageJson = require(resolvePath(
-          packageJsonPaths[packagePathIdx]
-        ));
+        const packageJson = require(resolvePath(packageJsonPaths[packagePathIdx]));
 
         if (!satisfies(packageJson.version, mapping.version, { loose: true })) {
           const requestedRange = validRange(mapping.version, { loose: true });
 
-          unmetDependencies.push("Unmet dependency!");
-          unmetDependencies.push(
-            `  - Requested: ${peerDependencyName}@${requestedRange}`
-          );
-          unmetDependencies.push(
-            `  - Installed: ${peerDependencyName}@${packageJson.version}`
-          );
+          unmetDependencies.push('Unmet dependency!');
+          unmetDependencies.push(`  - Requested: ${peerDependencyName}@${requestedRange}`);
+          unmetDependencies.push(`  - Installed: ${peerDependencyName}@${packageJson.version}`);
           unmetDependencies.push(`  - Requested by: ${mapping.path}`);
         }
       }
@@ -148,12 +135,12 @@ const validatePeerDependencies = async (
   let throwError = 0;
 
   if (unmetDependencies.length > 0 && LOG_UNMET) {
-    console.warn(unmetDependencies.join("\n"));
+    console.warn(unmetDependencies.join('\n'));
     throwError += 1;
   }
 
   if (missingDependencies.length > 0 && LOG_MISSING) {
-    console.warn(missingDependencies.join("\n"));
+    console.warn(missingDependencies.join('\n'));
     throwError += 2;
   }
 

@@ -1,0 +1,18 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "tslint:recommended",
+        "tslint-plugin-prettier",
+        "tslint-config-prettier"
+    ],
+    "jsRules": {},
+    "rules": {
+        "prettier": true,
+        "no-async-without-await": true,
+        "no-console": [false],
+        "no-floating-promises": true,
+        "quotemark": [true, "single", "avoid-escape", "avoid-template"],
+        "no-shadowed-variable": false
+    },
+    "rulesDirectory": []
+}
