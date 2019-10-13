@@ -11,7 +11,6 @@ const setupErrorHandler = (throwUnmet: boolean, throwMissing: boolean) => {
         }
         break;
       case 2:
-        console.log("case 2", code);
         if (throwMissing) {
           throw Error("Missing peer dependencies!");
         }
