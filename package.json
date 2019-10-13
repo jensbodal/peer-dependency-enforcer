@@ -1,6 +1,6 @@
 {
   "name": "@jensbodal/peer-dependency-enforcer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Peer dependency enforcement utils",
   "author": "Jens Bodal",
   "license": "MIT",
