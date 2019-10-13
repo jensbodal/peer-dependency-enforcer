@@ -2,16 +2,22 @@
   "name": "@jensbodal/peer-dependency-enforcer",
   "version": "0.1.0",
   "description": "Peer dependency enforcement utils",
+  "author": "Jens Bodal",
+  "license": "MIT",
+  "private": false,
+  "repository": "https://github.com/jensbodal/peer-dependency-enforcer",
+  "files": [
+    "bin/",
+    "lib/"
+  ],
   "main": "./lib/index.js",
   "bin": {
     "peer-dependency-enforcer": "./bin/peer-dependency-enforcer",
     "pde": "./bin/peer-dependency-enforcer"
   },
-  "author": "Jens Bodal",
-  "license": "MIT",
-  "private": false,
   "scripts": {
     "build": "rm -rf lib && tsc",
+    "prepack": "npm run build",
     "watch": "tsc --watch",
     "test": "none"
   },
