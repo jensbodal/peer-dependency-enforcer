@@ -19,8 +19,8 @@ const parseArgs = ({ listRuntimeDeps, validatePeerDeps }: { [key: string]: strin
           demandOption: true,
           desc: 'Array of folders to scan',
           // alllow -f a,b (no space between items in array)
-          type: 'array'
-        }
+          type: 'array',
+        },
       });
     })
     .command(validatePeerDeps, '(validate your peer dependency requirements)', yargs => {
@@ -28,23 +28,23 @@ const parseArgs = ({ listRuntimeDeps, validatePeerDeps }: { [key: string]: strin
         logMissing: {
           default: true,
           desc: 'Log to console any missing peer dependencies',
-          type: 'boolean'
+          type: 'boolean',
         },
         logUnmet: {
           default: true,
           desc: 'Log to console any unmet peer dependencies',
-          type: 'boolean'
+          type: 'boolean',
         },
         throwMissing: {
           default: true,
           desc: 'Throw error if there are missing peer dependencies',
-          type: 'boolean'
+          type: 'boolean',
         },
         throwUnmet: {
           default: false,
           desc: 'Throw error if there are unmet peer dependencies',
-          type: 'boolean'
-        }
+          type: 'boolean',
+        },
       });
     })
     .wrap(yargs.terminalWidth()).argv;
@@ -56,7 +56,7 @@ const parseArgs = ({ listRuntimeDeps, validatePeerDeps }: { [key: string]: strin
 
   return {
     ...yargs.argv,
-    command: yargs.argv._
+    command: yargs.argv._,
   };
 };
 

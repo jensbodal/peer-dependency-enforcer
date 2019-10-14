@@ -90,7 +90,7 @@ const validatePeerDependencies = async (
 
         peerDependencyMap[peerDependency].push({
           path,
-          version: packageJson.peerDependencies[peerDependency]
+          version: packageJson.peerDependencies[peerDependency],
         });
       }
     }

@@ -1,5 +1,5 @@
 // const baseConfig = require(...);
-const baseConfig = { singleQuote: true };
+const baseConfig = { singleQuote: true, trailingComma: 'es5' };
 
 module.exports = {
   ...baseConfig,
@@ -8,20 +8,20 @@ module.exports = {
     {
       files: '*',
       options: {
-        printWidth: 120
-      }
+        printWidth: 120,
+      },
     },
     {
       files: '*.json',
       options: {
-        parser: 'json'
-      }
+        parser: 'json',
+      },
     },
     {
       files: './**/*.ts',
       options: {
-        parser: 'typescript'
-      }
-    }
-  ]
+        parser: 'typescript',
+      },
+    },
+  ],
 };

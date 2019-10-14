@@ -6,35 +6,45 @@
   "license": "MIT",
   "private": false,
   "repository": "https://github.com/jensbodal/peer-dependency-enforcer",
-  "files": [
-    "bin/",
-    "lib/"
-  ],
   "main": "./lib/index.js",
   "bin": {
     "peer-dependency-enforcer": "./bin/peer-dependency-enforcer",
     "pde": "./bin/peer-dependency-enforcer"
   },
+  "files": [
+    "bin/",
+    "lib/"
+  ],
   "scripts": {
-    "build": "rm -rf lib && npm run lint && npm run format:check && tsc",
+    "build": "rm -rf lib && tsc",
     "fix": "npm run format && npm run lint:fix",
     "format": "prettier --write \"**/*.{ts,js}\"",
     "format:check": "prettier --list-different \"**/*.{ts,js}\"",
     "lint": "tslint --project tsconfig.json",
     "lint:fix": "npm run lint -- --fix",
-    "prepack": "npm run build",
+    "prepack": "npm run release",
+    "prerelease": "run-p lint format:check test",
+    "release": "npm run build",
     "watch": "tsc --watch",
-    "test": "none"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
-    "semver": "^5.7.1",
-    "yargs": "^14.2.0"
+    "@babel/parser": "^7.0.0",
+    "module-alias": "^2.2.2",
+    "semver": "^5.0.0",
+    "yargs": "^14.0.0"
   },
   "devDependencies": {
+    "@babel/types": "7.6.3",
+    "@types/jest": "24.0.18",
     "@types/node": "12.7.12",
     "@types/semver": "~6.0.2",
     "@types/yargs": "~13.0.3",
+    "jest": "24.9.0",
+    "npm-run-all": "4.1.5",
     "prettier": "1.18.2",
+    "ts-jest": "24.1.0",
     "ts-node": "~8.4.1",
     "tslint": "5.20.0",
     "tslint-config-prettier": "^1.18.0",

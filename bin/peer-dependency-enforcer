@@ -1,2 +1,12 @@
 #!/usr/bin/env node
+
+// tslint:disable: no-var-requires
+const moduleAlias = require('module-alias');
+const path = require('path');
+const rootDir = path.join(__dirname, '../');
+const libDir = path.join(rootDir, 'lib');
+
+// Add aliases from tsconfig
+moduleAlias.addAlias('@', libDir);
+
 require('../lib/index.js');

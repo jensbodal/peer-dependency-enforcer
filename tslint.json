@@ -8,6 +8,7 @@
     "jsRules": {},
     "rules": {
         "prettier": true,
+        "interface-name": [true, "never-prefix"],
         "no-async-without-await": true,
         "no-console": [false],
         "no-floating-promises": true,
