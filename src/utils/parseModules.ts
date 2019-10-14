@@ -7,12 +7,6 @@ const readFileAsync = promisify(readFile);
 
 const isScopedModule = (moduleName: string) => /^@[^\/]/.test(moduleName);
 
-const parseScopedModule = (moduleName: string) => {
-  const [, scopedImport] = moduleName.split('@');
-  const [scopeName, packageName] = scopedImport.split('/');
-  return `@${scopeName}/${packageName}`;
-};
-
 interface ParseModulesOptions {
   ignorePrefix: string[];
 }
@@ -58,7 +52,7 @@ const parseModules: ParseModules = async (filePath: string, passedOptions = {}) 
   const moduleCache = new Set<string>();
   const moduleNames: string[] = [];
   let fileContentsRemainder = fileContentsOneLine;
-  let recursionSafety = 100;
+  let recursionSafety = 10000;
 
   while (true) {
     recursionSafety--;
@@ -76,12 +70,21 @@ const parseModules: ParseModules = async (filePath: string, passedOptions = {}) 
     const importStatement = matches[1];
     // strip quotes that we added when putting file into one line
     const importName = matches[2].replace(/"/g, '');
+    const importNameParts = importName.split('/');
 
-    const moduleName: string = isScopedModule(importName) ? parseScopedModule(importName) : importName;
+    const moduleName: string = isScopedModule(importNameParts[0])
+      ? // scoped modules have a package name like @scope/packageName, so join the first two elements
+        importNameParts.slice(0, 2).join('/')
+      : // since scoped modules begin with '@' and relative directories begin with '.'
+      // we will just return the original import name since they should be 1st party dependencies
+      ['@', '.'].some(v => v === importNameParts[0])
+      ? importName
+      : // if a non-1st-party dependency isn't scoped, the module name will just be the first part
+        importNameParts[0];
 
     fileContentsRemainder = fileContentsRemainder.replace(importStatement, '');
 
-    if (!options.ignorePrefix.some(prefix => moduleName.startsWith(`${prefix}`))) {
+    if (!options.ignorePrefix.some(prefix => importName.startsWith(`${prefix}`))) {
       if (!moduleCache.has(moduleName)) {
         moduleCache.add(moduleName);
         moduleNames.push(moduleName);

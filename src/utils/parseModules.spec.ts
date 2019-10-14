@@ -59,5 +59,16 @@ describe('parseModules()', () => {
       ];
       expect(result.sort()).toEqual(expectedResult);
     });
+
+    it('parses submodules.js', async () => {
+      const result = await parseModules(`${testFiles}/submodules.js`);
+      const expectedResult = [
+        '@scopedModule/packageName',
+        '@scopedModuleWithSubmodule/packageName',
+        'oneSubmodule',
+        'twoSubmodules',
+      ];
+      expect(result.sort()).toEqual(expectedResult);
+    });
   });
 });
