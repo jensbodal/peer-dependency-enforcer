@@ -9,6 +9,7 @@ import { validatePeerDependencies } from './validatePeerDependencies';
   const validatePeerDeps = ['validatePeerDeps', 'vpd'];
   const args = parseArgs({ listRuntimeDeps, validatePeerDeps });
 
+  // if no args then our help will print and this exits
   if (!args) {
     return;
   }
@@ -19,7 +20,10 @@ import { validatePeerDependencies } from './validatePeerDependencies';
       [key: string]: string[];
     };
 
-    await listRuntimeDependencies(folders);
+    const runtimeDependencies = await listRuntimeDependencies(folders);
+
+    console.log('Your non-1st-party runtime dependencies');
+    console.log(runtimeDependencies);
   }
 
   // not sure how this gets typed with yargs
