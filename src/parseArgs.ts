@@ -48,6 +48,11 @@ const parseArgs = ({ listRuntimeDeps, validateInstalledDeps, validatePeerDeps }:
           desc: 'Log to console any missing peer dependencies',
           type: 'boolean',
         },
+        logTransient: {
+          default: true,
+          desc: 'Log to console any direct peer dependencies that have been installed indirectly',
+          type: 'boolean',
+        },
         logUnmet: {
           default: true,
           desc: 'Log to console any unmet peer dependencies',
@@ -56,6 +61,11 @@ const parseArgs = ({ listRuntimeDeps, validateInstalledDeps, validatePeerDeps }:
         throwMissing: {
           default: true,
           desc: 'Throw error if there are missing peer dependencies',
+          type: 'boolean',
+        },
+        throwTransient: {
+          default: true,
+          desc: 'Throw error if there are direct peer dependencies that have been installed indirectly',
           type: 'boolean',
         },
         throwUnmet: {

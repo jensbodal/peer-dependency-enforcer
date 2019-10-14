@@ -1,6 +1,6 @@
 import { listRuntimeDependencies } from './listRuntimeDependencies';
 import { parseArgs } from './parseArgs';
-import { arrayContains, packageJson } from './utils';
+import { arrayContains, getPackageJson } from './utils';
 import { validatePeerDependencies } from './validatePeerDependencies';
 
 // tslint:disable-next-line: no-floating-promises
@@ -36,8 +36,7 @@ import { validatePeerDependencies } from './validatePeerDependencies';
     const runtimeDependencies = await listRuntimeDependencies(folders);
     const runtimeDependenciesSet = new Set(runtimeDependencies);
 
-    const pkg = packageJson();
-    const { dependencies = {}, devDependencies = {}, peerDependencies = {} } = pkg;
+    const { dependencies, devDependencies, peerDependencies } = getPackageJson();
 
     const installed: string[] = [];
     const installedTwice: string[] = [];
@@ -134,10 +133,10 @@ import { validatePeerDependencies } from './validatePeerDependencies';
 
   // not sure how this gets typed with yargs
   if (arrayContains(args.command, validatePeerDeps)) {
-    const { logMissing, logUnmet, throwMissing, throwUnmet } = (args as unknown) as {
+    const { logMissing, logTransient, logUnmet, throwMissing, throwTransient, throwUnmet } = (args as unknown) as {
       [key: string]: boolean;
     };
 
-    await validatePeerDependencies(logMissing, logUnmet, throwMissing, throwUnmet);
+    await validatePeerDependencies(logMissing, logTransient, logUnmet, throwMissing, throwTransient, throwUnmet);
   }
 })();
