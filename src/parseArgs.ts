@@ -1,6 +1,6 @@
 import yargs from 'yargs';
 
-const parseArgs = ({ listRuntimeDeps, validatePeerDeps }: { [key: string]: string[] }) => {
+const parseArgs = ({ listRuntimeDeps, validateInstalledDeps, validatePeerDeps }: { [key: string]: string[] }) => {
   // yargs configuration happens statically
   // tslint:disable-next-line: no-unused-expression
   yargs
@@ -18,6 +18,24 @@ const parseArgs = ({ listRuntimeDeps, validatePeerDeps }: { [key: string]: strin
           },
           demandOption: true,
           desc: 'Array of folders to scan',
+          // alllow -f a,b (no space between items in array)
+          type: 'array',
+        },
+      });
+    })
+    .command(validateInstalledDeps, 'validate all installed and used dependencies', yargs => {
+      yargs.options({
+        folders: {
+          alias: 'f',
+          coerce: (args: string[]) => {
+            const newArgs: string[] = [];
+            for (const arg of args) {
+              newArgs.push(...arg.split(','));
+            }
+            return newArgs;
+          },
+          demandOption: true,
+          desc: 'Array of folders to scan for dependencies',
           // alllow -f a,b (no space between items in array)
           type: 'array',
         },

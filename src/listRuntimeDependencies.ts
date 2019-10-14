@@ -4,8 +4,8 @@ const listRuntimeDependencies = async (folders: string[]) => {
   const ignorePrefix = ['.', '@/', '/', 'src'];
 
   const allFiles = await getAllFiles(folders, {
-    excludeDirs: ['.git', 'node_modules', 'build'],
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    ignoreDirs: ['.git', 'node_modules', 'build', 'test/files'],
   });
 
   const moduleNames: string[] = [];

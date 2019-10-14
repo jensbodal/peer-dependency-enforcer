@@ -16,7 +16,7 @@ const getAllFiles = async (
   folders: string[],
   options?: {
     recursive?: boolean;
-    excludeDirs?: string[];
+    ignoreDirs?: string[];
     extensions?: string[];
   }
 ) => {

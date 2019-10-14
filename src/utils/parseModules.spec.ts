@@ -6,7 +6,7 @@ describe('parseModules()', () => {
   describe('parsing our own files', () => {
     it('parses parseModules.ts', async () => {
       const result = await parseModules(`${__dirname}/parseModules.ts`);
-      const expectedResult = ['@/utils', 'fs', 'util'];
+      const expectedResult = ['@/utils'];
       expect(result.sort()).toEqual(expectedResult);
     });
 
@@ -17,25 +17,25 @@ describe('parseModules()', () => {
 
     it('parses ls.ts', async () => {
       const result = await parseModules(`${__dirname}/ls.ts`);
-      expect(result.sort()).toEqual(['./isDirectory', 'fs', 'path', 'util']);
+      expect(result.sort()).toEqual(['./isDirectory']);
     });
 
     it('parses utils/index.ts', async () => {
       const result = await parseModules(`${__dirname}/index.ts`);
-      expect(result.sort()).toEqual(['./arrayContains', './getAllFiles', './logger', './ls', './parseModules']);
+      expect(result.sort()).toEqual([]);
     });
   });
 
   describe('parsing test files', () => {
     it('parses parseModules.compiled.js', async () => {
       const result = await parseModules(`${testFiles}/parseModules.compiled.js`);
-      const expectedResult = ['@/utils', '@babel/parser', '@babel/types', 'fs', 'util'];
+      const expectedResult = ['@/utils', '@babel/parser', '@babel/types'];
       expect(result.sort()).toEqual(expectedResult);
     });
 
     it('parses parseModules.compiled.js with excludePrefix "@/"', async () => {
       const result = await parseModules(`${testFiles}/parseModules.compiled.js`, { ignorePrefix: ['@/'] });
-      const expectedResult = ['@babel/parser', '@babel/types', 'fs', 'util'];
+      const expectedResult = ['@babel/parser', '@babel/types'];
       expect(result.sort()).toEqual(expectedResult);
     });
 

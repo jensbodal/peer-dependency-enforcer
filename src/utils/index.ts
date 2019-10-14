@@ -1,7 +1,7 @@
-import { arrayContains } from './arrayContains';
-import { getAllFiles } from './getAllFiles';
-import { logger } from './logger';
-import { ls } from './ls';
-import { parseModules } from './parseModules';
-
-export { arrayContains, getAllFiles, logger, ls, parseModules };
+export { arrayContains } from './arrayContains';
+export { getAllFiles } from './getAllFiles';
+export { logger } from './logger';
+export { ls } from './ls';
+export { packageJson } from './packageJson';
+export { parseModules } from './parseModules';
+export { getInstalledPath, getRootPath } from './paths';

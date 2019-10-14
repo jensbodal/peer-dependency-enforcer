@@ -16,7 +16,7 @@ const ls = async (
   path: string,
   options?: {
     recursive?: boolean;
-    excludeDirs?: string[];
+    ignoreDirs?: string[];
     extensions?: string[];
   }
 ) => lsHelper([], path, options);
@@ -26,13 +26,13 @@ const lsHelper = async (
   path: string,
   options?: {
     recursive?: boolean;
-    excludeDirs?: string[];
+    ignoreDirs?: string[];
     extensions?: string[];
   }
 ) => {
   const rootPath = resolvePath(path);
   let files: string[];
-  const excludeDirs = (options && options.excludeDirs) || [];
+  const ignoreDirs = (options && options.ignoreDirs) || [];
   const recursive = (options && options.recursive) || false;
   const extensions = (options && options.extensions) || [];
 
@@ -48,7 +48,7 @@ const lsHelper = async (
     try {
       if (await isDirectory(filePath)) {
         // if recursing and folder name is not excluded then recurse
-        if (recursive === true && !excludeDirs.some(dir => dir === fileName)) {
+        if (recursive === true && !ignoreDirs.some(dir => filePath.endsWith(dir))) {
           await lsHelper(allFiles, filePath, options);
         }
         continue;

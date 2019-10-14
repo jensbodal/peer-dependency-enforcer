@@ -1,4 +1,5 @@
 import { readFile } from 'fs';
+import module from 'module';
 import { promisify } from 'util';
 
 import { logger } from '@/utils';
@@ -84,7 +85,10 @@ const parseModules: ParseModules = async (filePath: string, passedOptions = {}) 
 
     fileContentsRemainder = fileContentsRemainder.replace(importStatement, '');
 
-    if (!options.ignorePrefix.some(prefix => importName.startsWith(`${prefix}`))) {
+    if (
+      !options.ignorePrefix.some(prefix => importName.startsWith(`${prefix}`)) &&
+      !module.builtinModules.includes(moduleName)
+    ) {
       if (!moduleCache.has(moduleName)) {
         moduleCache.add(moduleName);
         moduleNames.push(moduleName);
