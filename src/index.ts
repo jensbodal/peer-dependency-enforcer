@@ -29,7 +29,7 @@ import { validatePeerDependencies } from './validatePeerDependencies';
 
   // not sure how this gets typed with yargs
   if (arrayContains(args.command, validateInstalledDeps)) {
-    const { folders } = (args as unknown) as {
+    const { folders, withDevDependencies } = (args as unknown) as {
       [key: string]: string[];
     };
 
@@ -108,16 +108,19 @@ import { validatePeerDependencies } from './validatePeerDependencies';
       throwError += 2;
     }
 
-    // Too verbose, need to work on where it scans
-    // if (invalidDevDependencies.length > 0) {
-    //   console.log(
-    //     `Potentially invalid devDependencies (possibly used outside of scanned folders or extensions):\n  - ${invalidDevDependencies.join(
-    //       '\n  - '
-    //     )}`
-    //   );
-    //   throwError += 2;
-    // }
-    console.log('Not currently checking for invalid devDependencies');
+    if (withDevDependencies) {
+      // Too verbose, need to work on where it scans
+      if (invalidDevDependencies.length > 0) {
+        console.log(
+          `Potentially invalid devDependencies (possibly used outside of scanned folders or extensions):\n  - ${invalidDevDependencies.join(
+            '\n  - '
+          )}`
+        );
+        throwError += 2;
+      }
+    } else {
+      console.log('Not currently checking for invalid devDependencies');
+    }
 
     // This is also suggesting test dependencies, test dependencies should be removed from runtime dependencies
     if (suggestedPeerDependencies.length > 0) {

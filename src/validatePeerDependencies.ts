@@ -210,7 +210,6 @@ const validatePeerDependencies = async (
               `  - Installed by: ${dependencyMap[peerDependencyName].map(dep => dep.name).join(', ')}`
             );
           } catch (e) {
-
             console.error('####################################################################################');
             console.error(` ${peerDependencyName} has likely been removed but still exists in your node_modules`);
             console.error('####################################################################################\n');

@@ -39,6 +39,12 @@ const parseArgs = ({ listRuntimeDeps, validateInstalledDeps, validatePeerDeps }:
           // alllow -f a,b (no space between items in array)
           type: 'array',
         },
+        withDevDeps: {
+          alias: 'withDevDependencies',
+          default: true,
+          desc: 'Include validation against declared devDependencies',
+          type: 'boolean',
+        },
       });
     })
     .command(validatePeerDeps, '(validate your peer dependency requirements)', yargs => {
