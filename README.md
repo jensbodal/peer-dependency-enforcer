@@ -2,6 +2,8 @@
 
 ## Installation
 
+[peer-dependency-enforcer on npmjs.com](https://www.npmjs.com/package/@jensbodal/peer-dependency-enforcer)
+
 ```
 npm install --save-dev @jensbodal/peer-dependency-enforcer
 yarn add -ED  @jensbodal/peer-dependency-enforcer
@@ -103,3 +105,9 @@ This should probably be maintained elsewhere but leaving here for now:
 * Possibly print file information with output
 * Add test coverage report
 * Add more tests :)
+* Instead of filtering out all @types, return only those that don't have a matching package
+    - `@types/foo` with installed package `foo` is good
+    - `@types/bar` without any installed package `bar` is probably bad
+* Allow configuration of test vs runtime files. Still good to know what dependencies are used, however any dependencies
+    used in test code or test setup should not be considered runtime code that needs to have its 3rd party dependencies
+    in peerDependencies.
