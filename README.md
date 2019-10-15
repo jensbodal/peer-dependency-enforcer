@@ -58,11 +58,11 @@ See `peer-dependency-enforcer --help` for more information
 
 ```
 .git
-build           // add back with --with-build (TODO)
-node_modules    // add back with --with-node_modules (TODO)
+build           // add back with --with-build
+node_modules
 ```
 
-Additional directories can be ignored via `--ignore-dir` (TODO)
+Additional directories can be ignored via `--ignore-dir`
 
 ### By default, the following extensions are included for parsing:
 
@@ -73,9 +73,9 @@ Additional directories can be ignored via `--ignore-dir` (TODO)
 .jsx
 ```
 
-This list can be appended to with `--add-extension` (TODO)
+This list can be appended to with `--include-extension`
 
-The list can be replaced entirely with `--extension` (TODO)
+The list can be replaced entirely with `--extension`
 
 ### By default, the following module prefixes are ignored:
 
@@ -86,19 +86,18 @@ The list can be replaced entirely with `--extension` (TODO)
 src
 ```
 
-This list can be appended to with `--add-module-prefix` (TODO)
+This list can be appended to with `--ignore-module-prefix`
 
-This list can be replaced entirely with `--module-prefix` (TODO)
+This list can be replaced entirely with `--module-prefix`
 
 ### By default, all built in modules (e.g. 'fs' or 'path') are ignored
 
-This can be ignored via `--with-built-in` (TODO)
+This can be overridden via `--with-built-in`
 
 ## TODO
 
 This should probably be maintained elsewhere but leaving here for now:
 
-* Add commands mentioned above
 * Provide alternative logic for dependencies declared in test files
 * Possibly print version information with output
 * Possibly print file information with output

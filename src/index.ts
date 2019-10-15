@@ -1,4 +1,4 @@
-import { listRuntimeDependencies } from './listRuntimeDependencies';
+import { DEFAULT_IGNORE_MODULE_PREFIX, listRuntimeDependencies } from './listRuntimeDependencies';
 import { parseArgs } from './parseArgs';
 import { arrayContains, getPackageJson } from './utils';
 import { validatePeerDependencies } from './validatePeerDependencies';
@@ -17,11 +17,35 @@ import { validatePeerDependencies } from './validatePeerDependencies';
 
   // not sure how this gets typed with yargs
   if (arrayContains(args.command, listRuntimeDeps)) {
-    const { folders } = (args as unknown) as {
-      [key: string]: string[];
+    const {
+      extension,
+      folders,
+      ignoreDir,
+      ignoreModulePrefix,
+      includeExtension,
+      modulePrefix,
+      withBuild,
+      withBuiltIn,
+    } = (args as unknown) as {
+      extension: string[];
+      folders: string[];
+      ignoreDir: string[];
+      ignoreModulePrefix: string[];
+      includeExtension: string[];
+      modulePrefix: string[];
+      withBuild: boolean;
+      withBuiltIn: boolean;
     };
 
-    const runtimeDependencies = await listRuntimeDependencies(folders);
+    const runtimeDependencies = await listRuntimeDependencies(folders, {
+      extension,
+      ignoreDir,
+      ignoreModulePrefix,
+      includeExtension,
+      modulePrefix,
+      withBuild,
+      withBuiltIn,
+    });
 
     console.log('Your non-1st-party runtime dependencies');
     console.log(runtimeDependencies);
@@ -29,11 +53,37 @@ import { validatePeerDependencies } from './validatePeerDependencies';
 
   // not sure how this gets typed with yargs
   if (arrayContains(args.command, validateInstalledDeps)) {
-    const { folders, withDevDependencies } = (args as unknown) as {
-      [key: string]: string[];
+    const {
+      extension,
+      folders,
+      ignoreDir,
+      includeExtension,
+      ignoreModulePrefix,
+      modulePrefix,
+      withBuild,
+      withBuiltIn,
+      withDevDependencies,
+    } = (args as unknown) as {
+      extension: string[];
+      folders: string[];
+      ignoreDir: string[];
+      includeExtension: string[];
+      ignoreModulePrefix: string[];
+      modulePrefix: string[];
+      withBuild: boolean;
+      withBuiltIn: boolean;
+      withDevDependencies: boolean;
     };
 
-    const runtimeDependencies = await listRuntimeDependencies(folders);
+    const runtimeDependencies = await listRuntimeDependencies(folders, {
+      extension,
+      ignoreDir,
+      ignoreModulePrefix,
+      includeExtension,
+      modulePrefix,
+      withBuild,
+      withBuiltIn,
+    });
     const runtimeDependenciesSet = new Set(runtimeDependencies);
 
     const { dependencies, devDependencies, peerDependencies } = getPackageJson();
@@ -78,7 +128,10 @@ import { validatePeerDependencies } from './validatePeerDependencies';
     }
 
     for (const dep of Object.keys(devDependencies)) {
-      if (!runtimeDependenciesSet.has(dep)) {
+      if (
+        !runtimeDependenciesSet.has(dep) &&
+        !DEFAULT_IGNORE_MODULE_PREFIX.concat(ignoreModulePrefix || []).some(prefix => dep.startsWith(prefix))
+      ) {
         invalidDevDependencies.push(dep);
       }
     }

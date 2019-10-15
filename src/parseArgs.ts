@@ -1,3 +1,4 @@
+import { DEFAULT_EXTENSIONS, DEFAULT_IGNORE_DIRS, DEFAULT_IGNORE_MODULE_PREFIX } from '@/listRuntimeDependencies';
 import yargs from 'yargs';
 
 const parseArgs = ({ listRuntimeDeps, validateInstalledDeps, validatePeerDeps }: { [key: string]: string[] }) => {
@@ -7,6 +8,17 @@ const parseArgs = ({ listRuntimeDeps, validateInstalledDeps, validatePeerDeps }:
     .strict()
     .command(listRuntimeDeps, '(list all non-1st-party runtime dependencies)', yargs => {
       yargs.options({
+        extension: {
+          coerce: (args: string[]) => {
+            const newArgs: string[] = [];
+            for (const arg of args) {
+              newArgs.push(...arg.split(','));
+            }
+            return newArgs;
+          },
+          desc: `Override extensions that are parsed (Default: "${DEFAULT_EXTENSIONS.join('","')}")`,
+          type: 'array',
+        },
         folders: {
           alias: 'f',
           coerce: (args: string[]) => {
@@ -17,14 +29,82 @@ const parseArgs = ({ listRuntimeDeps, validateInstalledDeps, validatePeerDeps }:
             return newArgs;
           },
           demandOption: true,
-          desc: 'Array of folders to scan',
+          desc: 'Folders to scan for dependencies (e.g. "src,test")',
           // alllow -f a,b (no space between items in array)
           type: 'array',
+        },
+        ignoreDir: {
+          alias: ['ignore'],
+          coerce: (args: string[]) => {
+            const newArgs: string[] = [];
+            for (const arg of args) {
+              newArgs.push(...arg.split(','));
+            }
+            return newArgs;
+          },
+          desc: `Additional directories to not scan (Default: "${DEFAULT_IGNORE_DIRS.join('","')}")`,
+          type: 'array',
+        },
+        ignoreModulePrefix: {
+          coerce: (args: string[]) => {
+            const newArgs: string[] = [];
+            for (const arg of args) {
+              newArgs.push(...arg.split(','));
+            }
+            return newArgs;
+          },
+          desc: `Module prefixes to ignore, useful if setting custom paths in tsconfig (Default: "${DEFAULT_IGNORE_MODULE_PREFIX.join(
+            '","'
+          )}")`,
+          type: 'array',
+        },
+        includeExtension: {
+          coerce: (args: string[]) => {
+            const newArgs: string[] = [];
+            for (const arg of args) {
+              newArgs.push(...arg.split(','));
+            }
+            return newArgs;
+          },
+          desc: `Additional extensions to search for (Default: "${DEFAULT_EXTENSIONS.join('","')}")`,
+          type: 'array',
+        },
+        modulePrefix: {
+          coerce: (args: string[]) => {
+            const newArgs: string[] = [];
+            for (const arg of args) {
+              newArgs.push(...arg.split(','));
+            }
+            return newArgs;
+          },
+          desc: `Override module prefixes that are ignored (Default: "${DEFAULT_IGNORE_MODULE_PREFIX.join('","')}")`,
+          type: 'array',
+        },
+        withBuild: {
+          default: false,
+          desc: 'Include folders called "build" in scans',
+          type: 'boolean',
+        },
+        withBuiltIn: {
+          default: false,
+          desc: 'Include in module listings folders in the core node module',
+          type: 'boolean',
         },
       });
     })
     .command(validateInstalledDeps, 'validate all installed and used dependencies', yargs => {
       yargs.options({
+        extension: {
+          coerce: (args: string[]) => {
+            const newArgs: string[] = [];
+            for (const arg of args) {
+              newArgs.push(...arg.split(','));
+            }
+            return newArgs;
+          },
+          desc: `Override extensions that are parsed (Default: "${DEFAULT_EXTENSIONS.join('","')}")`,
+          type: 'array',
+        },
         folders: {
           alias: 'f',
           coerce: (args: string[]) => {
@@ -35,13 +115,70 @@ const parseArgs = ({ listRuntimeDeps, validateInstalledDeps, validatePeerDeps }:
             return newArgs;
           },
           demandOption: true,
-          desc: 'Array of folders to scan for dependencies',
+          desc: 'Folders to scan for dependencies (e.g. "src,test")',
           // alllow -f a,b (no space between items in array)
           type: 'array',
         },
+        ignoreDir: {
+          alias: ['ignore'],
+          coerce: (args: string[]) => {
+            const newArgs: string[] = [];
+            for (const arg of args) {
+              newArgs.push(...arg.split(','));
+            }
+            return newArgs;
+          },
+          desc: `Additional directories to not scan (Default: "${DEFAULT_IGNORE_DIRS.join('","')}")`,
+          type: 'array',
+        },
+        ignoreModulePrefix: {
+          coerce: (args: string[]) => {
+            const newArgs: string[] = [];
+            for (const arg of args) {
+              newArgs.push(...arg.split(','));
+            }
+            return newArgs;
+          },
+          desc: `Module prefixes to ignore, useful if setting custom paths in tsconfig (Default: "${DEFAULT_IGNORE_MODULE_PREFIX.join(
+            '","'
+          )}")`,
+          type: 'array',
+        },
+        includeExtension: {
+          coerce: (args: string[]) => {
+            const newArgs: string[] = [];
+            for (const arg of args) {
+              newArgs.push(...arg.split(','));
+            }
+            return newArgs;
+          },
+          desc: `Additional extensions to search for (Default: "${DEFAULT_EXTENSIONS.join('","')}")`,
+          type: 'array',
+        },
+        modulePrefix: {
+          coerce: (args: string[]) => {
+            const newArgs: string[] = [];
+            for (const arg of args) {
+              newArgs.push(...arg.split(','));
+            }
+            return newArgs;
+          },
+          desc: `Override module prefixes that are ignored (Default: "${DEFAULT_IGNORE_MODULE_PREFIX.join('","')}")`,
+          type: 'array',
+        },
+        withBuild: {
+          default: false,
+          desc: 'Include folders called "build" in scans',
+          type: 'boolean',
+        },
+        withBuiltIn: {
+          default: false,
+          desc: 'Include in module listings folders in the core node module',
+          type: 'boolean',
+        },
         withDevDeps: {
-          alias: 'withDevDependencies',
-          default: true,
+          alias: ['withDevDependencies', 'withDev'],
+          default: false,
           desc: 'Include validation against declared devDependencies',
           type: 'boolean',
         },

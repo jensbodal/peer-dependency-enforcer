@@ -9,12 +9,14 @@ const readFileAsync = promisify(readFile);
 const isScopedModule = (moduleName: string) => /^@[^\/]/.test(moduleName);
 
 interface ParseModulesOptions {
-  ignorePrefix: string[];
+  ignoreModulePrefix: string[];
+  withBuiltIn: boolean;
 }
 type ParseModules = (filePath: string, options?: Partial<ParseModulesOptions>) => Promise<string[]>;
 
 const defaultOptions = {
-  ignorePrefix: [],
+  ignoreModulePrefix: [],
+  withBuiltIn: false,
 };
 
 const parseModules: ParseModules = async (filePath: string, passedOptions = {}) => {
@@ -85,9 +87,11 @@ const parseModules: ParseModules = async (filePath: string, passedOptions = {}) 
 
     fileContentsRemainder = fileContentsRemainder.replace(importStatement, '');
 
+    const builtInModules = options.withBuiltIn ? [] : module.builtinModules;
+
     if (
-      !options.ignorePrefix.some(prefix => importName.startsWith(`${prefix}`)) &&
-      !module.builtinModules.includes(moduleName)
+      !options.ignoreModulePrefix.some(prefix => importName.startsWith(`${prefix}`)) &&
+      !builtInModules.includes(moduleName)
     ) {
       if (!moduleCache.has(moduleName)) {
         moduleCache.add(moduleName);

@@ -34,7 +34,7 @@ describe('parseModules()', () => {
     });
 
     it('parses parseModules.compiled.js with excludePrefix "@/"', async () => {
-      const result = await parseModules(`${testFiles}/parseModules.compiled.js`, { ignorePrefix: ['@/'] });
+      const result = await parseModules(`${testFiles}/parseModules.compiled.js`, { ignoreModulePrefix: ['@/'] });
       const expectedResult = ['@babel/parser', '@babel/types'];
       expect(result.sort()).toEqual(expectedResult);
     });
