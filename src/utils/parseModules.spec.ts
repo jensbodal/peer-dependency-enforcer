@@ -17,7 +17,7 @@ describe('parseModules()', () => {
 
     it('parses ls.ts', async () => {
       const result = await parseModules(`${__dirname}/ls.ts`);
-      expect(result.sort()).toEqual(['./isDirectory']);
+      expect(result.sort()).toEqual(['./isDirectory', '@/utils']);
     });
 
     it('parses utils/index.ts', async () => {

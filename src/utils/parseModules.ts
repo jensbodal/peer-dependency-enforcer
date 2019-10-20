@@ -26,8 +26,6 @@ const parseModules: ParseModules = async (filePath: string, passedOptions = {}) 
     ...passedOptions,
   };
 
-  logger.debug(filePath);
-
   const blob = await readFileAsync(filePath);
   const fileContents = blob.toString();
 
@@ -61,7 +59,7 @@ const parseModules: ParseModules = async (filePath: string, passedOptions = {}) 
     recursionSafety--;
 
     if (--recursionSafety === 0) {
-      break;
+      throw Error('Recursion safety limit hit 10,000 iterations, likely something unknown went wrong');
     }
 
     const matches = fileContentsRemainder.match(moduleBlockRegex);
@@ -75,6 +73,7 @@ const parseModules: ParseModules = async (filePath: string, passedOptions = {}) 
     const importName = matches[2].replace(/"/g, '');
     const importNameParts = importName.split('/');
 
+    // TODO this function name doesn't make sense
     const moduleName: string = isScopedModule(importNameParts[0])
       ? // scoped modules have a package name like @scope/packageName, so join the first two elements
         importNameParts.slice(0, 2).join('/')
@@ -93,7 +92,13 @@ const parseModules: ParseModules = async (filePath: string, passedOptions = {}) 
       !options.ignoreModulePrefix.some(prefix => importName.startsWith(`${prefix}`)) &&
       !builtInModules.includes(moduleName)
     ) {
+      // moduleCache is currently only on a per file basis
+      // to support cache for entire runtime requires rethinking unit tests
+      // check if jest supports reimporting modules between tests?
       if (!moduleCache.has(moduleName)) {
+        logger.verbose(moduleName);
+        logger.verbose(filePath);
+
         moduleCache.add(moduleName);
         moduleNames.push(moduleName);
       }

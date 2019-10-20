@@ -1,4 +1,4 @@
-import { getAllFiles, parseModules } from './utils';
+import { getAllFiles, logger, parseModules } from './utils';
 
 type ListRuntimeDependenciesOptions = Partial<{
   extension: string[];
@@ -30,10 +30,21 @@ const listRuntimeDependencies = async (folders: string[], options: ListRuntimeDe
       ? modulePrefixOverride
       : DEFAULT_IGNORE_MODULE_PREFIX.concat(additionalIgnoreModulePrefix);
 
+  logger.debug(
+    JSON.stringify(
+      {
+        extensions: extensionOverride.length > 0 ? extensionOverride : DEFAULT_EXTENSIONS.concat(includeExtension),
+        ignoreDirs: DEFAULT_IGNORE_DIRS.filter(dir => (withBuild && dir === 'build' ? '' : dir)).concat(ignoreDir),
+      },
+      null,
+      2
+    )
+  );
+
   const allFiles = await getAllFiles(folders, {
     extensions: extensionOverride.length > 0 ? extensionOverride : DEFAULT_EXTENSIONS.concat(includeExtension),
     // remove build if from ignored directories if withBuild set
-    ignoreDirs: DEFAULT_IGNORE_DIRS.filter(dir => (!withBuild && dir === 'build' ? '' : dir)).concat(ignoreDir),
+    ignoreDirs: DEFAULT_IGNORE_DIRS.filter(dir => (withBuild && dir === 'build' ? '' : dir)).concat(ignoreDir),
   });
 
   const moduleNames: string[] = [];
