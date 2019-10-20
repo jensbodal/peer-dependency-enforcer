@@ -2,6 +2,7 @@ import { readdir } from 'fs';
 import { resolve as resolvePath } from 'path';
 import { promisify } from 'util';
 
+import { logger } from '@/utils';
 import { isDirectory } from './isDirectory';
 
 const readdirAsync = promisify(readdir);
@@ -35,6 +36,8 @@ const lsHelper = async (
   const ignoreDirs = (options && options.ignoreDirs) || [];
   const recursive = (options && options.recursive) || false;
   const extensions = (options && options.extensions) || [];
+
+  logger.verbose(`ls options: ${JSON.stringify(options, null, 2)}`);
 
   try {
     files = await readdirAsync(rootPath);
